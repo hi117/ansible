@@ -1,0 +1,5 @@
+---
+# shigoto
+- hosts: localhost
+  roles:
+    - slack

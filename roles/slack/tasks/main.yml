@@ -1,0 +1,15 @@
+---
+- name: Install slack solarized
+  blockinfile:
+    path: /usr/lib/slack/resources/app.asar.unpacked/src/static/ssb-interop.js
+    marker: "// {mark} ANSIBLE MANAGED BLOCK"
+    block: |
+      document.addEventListener('DOMContentLoaded', function() {
+        $.ajax({
+          url: 'https://raw.githubusercontent.com/phwelo/solarized-slack/master/css/solarized.css',
+          success: function(css) {
+            $("<style></style>").appendTo('head').html(css);
+          }
+        });
+      });
+
