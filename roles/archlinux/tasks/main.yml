@@ -1,0 +1,46 @@
+---
+- name: Install reflector
+  pacman: name=reflector
+
+- name: Setup reflector.service
+  template:
+    src: reflector.service
+    dest: /etc/systemd/system/reflector.service
+
+- name: Setup reflector.timer
+  template:
+    src: reflector.timer
+    dest: /etc/systemd/system/reflector.timer
+
+- name: Start reflector
+  systemd:
+    name: reflector.timer
+    enabled: yes
+    state: started
+
+- name: Update reflector
+  systemd: name=reflector.service state=started
+
+- name: Update system
+  pacman: update_cache=yes upgrade=yes
+
+- name: Install packages
+  pacman:
+    name:
+      - vim
+      - htop
+      - iotop
+      - python
+      - intel-ucode
+      - ipcalc
+      - rxvt-unicode-terminfo
+      - openssh
+      - jq
+      - dhcpcd
+      - irqbalance
+
+- name: Enable irqbalance
+  systemd:
+    name: irqbalance.service
+    state: started
+    enabled: yes

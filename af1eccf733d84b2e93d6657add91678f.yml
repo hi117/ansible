@@ -2,4 +2,5 @@
 # shigoto
 - hosts: localhost
   roles:
+    - archlinux
     - slack

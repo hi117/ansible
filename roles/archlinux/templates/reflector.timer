@@ -1,0 +1,8 @@
+[Unit]
+Description=Pacman mirrorlist update
+
+[Timer]
+OnCalendar=*-*-* 00:00:00
+
+[Install]
+WantedBy=default.target
