@@ -44,3 +44,14 @@
     name: irqbalance.service
     state: started
     enabled: yes
+
+- name: Setup timesyncd
+  template:
+    src: timesyncd.conf
+    dest: /etc/systemd/timesyncd.conf
+
+- name: Enable/start timesyncd
+  systemd:
+    name: systemd-timesyncd.service
+    state: started
+    enabled: yes
