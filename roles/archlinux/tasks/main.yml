@@ -38,6 +38,22 @@
       - jq
       - dhcpcd
       - irqbalance
+      - git
+
+- name: Pull yay
+  git:
+    repo: https://aur.archlinux.org/yay.git
+    dest: /usr/local/share/yay
+
+- name: Build yay
+  makepkg:
+    name: yay
+    state: present
+    build_dir: /usr/local/share/yay
+
+- name: Update aur
+  yay: update_cache=yes upgrade=yes
+  become: no
 
 - name: Enable irqbalance
   systemd:
