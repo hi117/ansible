@@ -10,7 +10,11 @@
       - name: root
         home: /root
   roles:
-    - archlinux
-    - users
-    - i3
-    - slack
+    - role: archlinux
+      tags: archlinux
+    - role: users
+      tags: users
+    - role: i3
+      tags: i3
+    - role: slack
+      tags: slack

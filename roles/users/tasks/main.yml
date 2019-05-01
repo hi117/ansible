@@ -19,4 +19,13 @@
     state: link
   with_nested:
     - "{{ users }}"
-    - [ ".vimrc", ".vim", ".zshrc", ".tmux.conf", .gdbinit, .radare2rc , .Xresources]
+    - - .vimrc
+      - .vim
+      - .zshrc
+      - .tmux.conf
+      - .gdbinit
+      - .radare2rc
+      - .Xresources
+      - .config/kitty
+      - .config/nvim
+      - .config/libinput-gestures.conf
