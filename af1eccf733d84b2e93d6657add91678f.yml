@@ -2,8 +2,15 @@
 # shigoto
 - hosts: localhost
   vars:
-    main_user: zwinnerman
+    users:
+      - name: zwinnerman
+        home: /home/zwinnerman
+      - name: root
+        home: /etc/skel
+      - name: root
+        home: /root
   roles:
     - archlinux
+    - users
     - i3
     - slack

@@ -11,26 +11,29 @@
     src: i3.desktop
     dest: /usr/share/xsessions/i3.desktop
 
+- name: Make i3 config dir
+  file:
+    name: "{{ item[0].home }}/.config/{{ item[1] }}"
+    state: directory
+    owner: "{{ item[0].name }}"
+  with_nested:
+    - "{{ users }}"
+    - [ i3, i3blocks ]
+
 - name: Install i3 config
   template:
     src: config
-    dest: "{{ item }}/.config/i3/config"
-  with_items:
-    - "/home/{{ main_user }}"
-    - /etc/skel
+    dest: "{{ item.home }}/.config/i3/config"
+  with_items: "{{ users }}"
 
 - name: Install i3 blocks config
   template:
     src: i3blocks.conf
-    dest: "{{ item }}/.config/i3blocks/i3blocks.conf"
-  with_items:
-    - "/home/{{ main_user }}"
-    - /etc/skel
+    dest: "{{ item.home }}/.config/i3blocks/i3blocks.conf"
+  with_items: "{{ users }}"
 
 - name: Install background
   copy:
     src: bg1
-    dest: "{{ item }}/.config/i3/bg1"
-  with_items:
-    - "/home/{{ main_user }}"
-    - /etc/skel
+    dest: "{{ item.home }}/.config/i3/bg1"
+  with_items: "{{ users }}"

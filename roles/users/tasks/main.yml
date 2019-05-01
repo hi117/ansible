@@ -1,0 +1,22 @@
+---
+- name: Make .config
+  file:
+    name: "{{ item.home }}/.config"
+    state: directory
+  with_items: "{{ users }}"
+
+- name: Pull dotfiles
+  git:
+    repo: https://github.com/hi117/dotFiles.git
+    dest: "{{ item.home }}/.config/dotFiles"
+  become_user: "{{ item.name }}"
+  with_items: "{{ users }}"
+
+- name: Install dotFiles
+  file:
+    src: "{{ item[0].home }}/.config/dotFiles/{{ item[1] }}"
+    dest: "{{ item[0].home }}/{{ item[1] }}"
+    state: link
+  with_nested:
+    - "{{ users }}"
+    - [ ".vimrc", ".vim", ".zshrc", ".tmux.conf", .gdbinit, .radare2rc , .Xresources]
