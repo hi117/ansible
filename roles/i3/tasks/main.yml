@@ -1,0 +1,36 @@
+---
+- name: Install i3
+  pacman:
+    name:
+      - i3-gaps
+      - i3blocks
+    state: present
+
+- name: Copy i3 xsession
+  template:
+    src: i3.desktop
+    dest: /usr/share/xsessions/i3.desktop
+
+- name: Install i3 config
+  template:
+    src: config
+    dest: "{{ item }}/.config/i3/config"
+  with_items:
+    - "/home/{{ main_user }}"
+    - /etc/skel
+
+- name: Install i3 blocks config
+  template:
+    src: i3blocks.conf
+    dest: "{{ item }}/.config/i3blocks/i3blocks.conf"
+  with_items:
+    - "/home/{{ main_user }}"
+    - /etc/skel
+
+- name: Install background
+  copy:
+    src: bg1
+    dest: "{{ item }}/.config/i3/bg1"
+  with_items:
+    - "/home/{{ main_user }}"
+    - /etc/skel

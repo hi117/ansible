@@ -1,6 +1,9 @@
 ---
 # shigoto
 - hosts: localhost
+  vars:
+    main_user: zwinnerman
   roles:
     - archlinux
+    - i3
     - slack

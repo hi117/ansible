@@ -40,11 +40,6 @@
       - irqbalance
       - git
 
-- name: Pull yay
-  git:
-    repo: https://aur.archlinux.org/yay.git
-    dest: /usr/local/share/yay
-
 - name: Build yay
   makepkg:
     name: yay
