@@ -1,4 +1,11 @@
 ---
+- name: Create users
+  user:
+    name: "{{ item.name }}"
+    home: "{{ item.home }}"
+    shell: /bin/zsh
+  with_items: "{{ users }}"
+
 - name: Make .config
   file:
     name: "{{ item.home }}/.config"
@@ -9,6 +16,7 @@
   git:
     repo: https://github.com/hi117/dotFiles.git
     dest: "{{ item.home }}/.config/dotFiles"
+    force: yes
   become_user: "{{ item.name }}"
   with_items: "{{ users }}"
 

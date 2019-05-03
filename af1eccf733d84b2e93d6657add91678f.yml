@@ -6,8 +6,6 @@
       - name: zwinnerman
         home: /home/zwinnerman
       - name: root
-        home: /etc/skel
-      - name: root
         home: /root
   roles:
     - role: archlinux
