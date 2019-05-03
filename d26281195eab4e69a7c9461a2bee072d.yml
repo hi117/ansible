@@ -1,0 +1,14 @@
+---
+# compute
+- hosts: localhost
+  vars:
+    users:
+      - name: hi117
+        home: /home/hi117
+      - name: root
+        home: /root
+  roles:
+    - role: archlinux
+      tags: archlinux
+    - role: users
+      tags: users
