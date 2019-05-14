@@ -18,3 +18,5 @@
       tags: i3
     - role: slack
       tags: slack
+    - role: mpv
+      tags: mpv
