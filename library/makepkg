@@ -148,6 +148,7 @@ def remove_package(module, pkg):
     module.exit_json(changed=True, msg="removed package %s" % pkg)
 
 def prepare_build_dir(module, pkg_name, sudo_user):
+    '''Prepares the directory for building a package'''
     build_dir = module.params['build_dir']
     uid = pwd.getpwnam(sudo_user).pw_uid
     gid = grp.getgrnam('users').gr_gid
@@ -168,6 +169,7 @@ def prepare_build_dir(module, pkg_name, sudo_user):
     return directory
 
 def make_package(module, pkg, pkg_file_src):
+    '''Builds a package'''
     sudo_user = os.environ.get('SUDO_USER')
 
     # Build as user, not as root
@@ -184,36 +186,39 @@ def make_package(module, pkg, pkg_file_src):
         try:
             shutil.copy2(pkg_file_src, build_dir)
         except Exception as err:
-            module.fail_json(msg="failed to copy package %s to build directory %s: %s" % (pkg_file_src, build_dir, str(err)))
+            module.fail_json(msg="failed to copy package %s to build directory %s: %s" %
+                             (pkg_file_src, build_dir, str(err)))
     else:
-        aur_req = urlunsplit((AUR_SCHEME, AUR_NETLOC, "%s/%s" % (AUR_SNAPSHOT_PATH, pkg_file_basename), "", ""))
+        aur_req = urlunsplit((AUR_SCHEME, AUR_NETLOC, "%s/%s" %
+                              (AUR_SNAPSHOT_PATH, pkg_file_basename), "", ""))
         rsp, info = fetch_url(module, aur_req)
 
         if info['status'] != 200:
-            module.fail_json(msg="Request failed", url=aur_req, status_code=info['status'], response=info['msg'])
+            module.fail_json(msg="Request failed", url=aur_req,
+                             status_code=info['status'], response=info['msg'])
 
         # save response to archive
-        f = open(pkg_file_dest, 'wb')
-        try:
-            shutil.copyfileobj(rsp, f)
-        except Exception as err:
-            os.remove(pkg_file_dest)
-            module.fail_json(msg="failed to create package archive file: %s" % str(err))
-        f.close()
+        with open(pkg_file_dest, 'wb') as handle:
+            try:
+                shutil.copyfileobj(rsp, handle)
+            except Exception as err:
+                os.remove(pkg_file_dest)
+                module.fail_json(msg="failed to create package archive file: %s" % str(err))
         rsp.close()
 
     pkg_file = pkg_file_dest
 
     if pkg_file:
         cmd = '%star --strip-components=1 -xf %s.tar.gz' % (command_prefix, pkg)
-        rc, stdout, stderr = module.run_command(cmd, check_rc=False, cwd=build_dir)
-        if rc != 0:
+        return_code, _, stderr = module.run_command(cmd, check_rc=False, cwd=build_dir)
+        if return_code != 0:
             module.fail_json(msg="failed to extract %s for pkg %s" % (pkg_file, pkg), stderr=stderr)
 
     cmd = '%smakepkg -scf --noconfirm' % command_prefix
-    rc, stdout, stderr = module.run_command(cmd, check_rc=False, cwd=build_dir)
-    if rc != 0:
-        module.fail_json(msg="failed to build package %s in %s from %s" % (pkg, pkg_file, build_dir), stderr=stderr)
+    return_code, _, stderr = module.run_command(cmd, check_rc=False, cwd=build_dir)
+    if return_code != 0:
+        module.fail_json(msg="failed to build package %s in %s from %s" %
+                         (pkg, pkg_file, build_dir), stderr=stderr)
 
     found_file = None
     matcher = re.compile(r'%s-.*\.pkg\.tar\.xz$' % pkg)
@@ -230,18 +235,21 @@ def make_package(module, pkg, pkg_file_src):
     try:
         shutil.copy(os.path.join(build_dir, found_file), PACKAGE_CACHE)
     except Exception as err:
-        module.fail_json("Failed to copy package %s to cache %s: %s" % (found_file, PACKAGE_CACHE, str(err)))
+        module.fail_json("Failed to copy package %s to cache %s: %s" %
+                         (found_file, PACKAGE_CACHE, str(err)))
 
     # Don't leave build files lying around
     try:
         shutil.rmtree(build_dir)
     except Exception as err:
-        module.fail_json(msg="failed to remove temporary build directory %s: %s" % (build_dir, str(err)))
+        module.fail_json(msg="failed to remove temporary build directory %s: %s" %
+                         (build_dir, str(err)))
 
-    return os.path.join(PACKAGE_CACHE,found_file)
+    return os.path.join(PACKAGE_CACHE, found_file)
 
 
 def check_build_environment(module):
+    '''Makes sure that the environment is ready to build packages'''
     user = os.environ.get('USER')
     sudo_user = os.environ.get('SUDO_USER')
     build_dir = module.params['build_dir']
@@ -261,6 +269,7 @@ def check_build_environment(module):
         module.fail_json(msg="base build directory %s is not accessible" % build_dir)
 
 def install_package(module, pkg, pkg_file):
+    '''Installs a given package'''
     check_build_environment(module)
 
     if query_package(module, pkg):
@@ -274,7 +283,8 @@ def install_package(module, pkg, pkg_file):
 
         # create a temporary file and copy content to do checksum-based replacement
         if info['status'] != 200:
-            module.fail_json(msg="Request failed", status_code=info['status'], response=info['msg'], url=rpc_req)
+            module.fail_json(msg="Request failed", status_code=info['status'],
+                             response=info['msg'], url=rpc_req)
 
         pkg_info = json.load(rsp)
 
@@ -296,15 +306,15 @@ def install_package(module, pkg, pkg_file):
         params = '-U %s' % pkg_path
 
     cmd = "pacman %s --noconfirm" % (params)
-    rc, stdout, stderr = module.run_command(cmd, check_rc=False)
+    return_code, _, stderr = module.run_command(cmd, check_rc=False)
 
-    if rc != 0:
+    if return_code != 0:
         module.fail_json(msg="failed to install package", pkg=pkg, stderr=stderr)
 
     module.exit_json(changed=True, msg="installed package", pkg=pkg)
 
 def check_package(module, pkg, state):
-
+    '''Checks the state of a given package'''
     changed = False
     installed = query_package(module, pkg)
 
@@ -325,7 +335,7 @@ def check_package(module, pkg, state):
 
 
 def main():
-
+    '''Main function'''
     argument_spec = dict(
         name=dict(aliases=['pkg'], required=True),
         state=dict(choices=['installed', 'present', 'absent', 'removed'], required=True),
@@ -335,9 +345,9 @@ def main():
     )
 
     module = AnsibleModule(
-        argument_spec = argument_spec,
-        required_one_of = [['name']],
-        supports_check_mode = True
+        argument_spec=argument_spec,
+        required_one_of=[['name']],
+        supports_check_mode=True
     )
 
     if not os.path.exists(PACMAN_PATH):
@@ -345,15 +355,15 @@ def main():
     if not os.path.exists(MAKEPKG_PATH):
         module.fail_json(msg="cannot find makepkg, looking for %s" % (MAKEPKG_PATH))
 
-    p = module.params
+    params = module.params
 
     # normalize the state parameter
-    if p['state'] in ['present', 'installed']:
-        p['state'] = 'present'
-    elif p['state'] in ['absent', 'removed']:
-        p['state'] = 'absent'
+    if params['state'] in ['present', 'installed']:
+        params['state'] = 'present'
+    elif params['state'] in ['absent', 'removed']:
+        params['state'] = 'absent'
 
-    pkg = p['name']
+    pkg = params['name']
     pkg_file = None
     if pkg.endswith('.tar.gz'):
         # The package given is a filename, extract the raw pkg name from
@@ -362,11 +372,11 @@ def main():
         pkg = os.path.basename(pkg)[:-1 * len('.tar.gz')]
 
     if module.check_mode:
-        check_package(module, pkg, p['state'])
+        check_package(module, pkg, params['state'])
 
-    if p['state'] == 'present':
+    if params['state'] == 'present':
         install_package(module, pkg, pkg_file)
-    elif p['state'] == 'absent':
+    elif params['state'] == 'absent':
         remove_package(module, pkg)
 
 main()
