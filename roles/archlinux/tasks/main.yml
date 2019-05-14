@@ -18,8 +18,13 @@
     enabled: yes
     state: started
 
+- name: Get update time of mirrorlist
+  stat: path=/etc/pacman.d/mirrorlist
+  register: mirrorlist
+
 - name: Update reflector
   systemd: name=reflector.service state=started
+  when: (ansible_date_time.epoch | int) > (mirrorlist.stat.mtime + 86400)
 
 - name: Update system
   pacman: update_cache=yes upgrade=yes
