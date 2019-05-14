@@ -1,0 +1,5 @@
+{% if 'ssh-authorized-keys' in users %}
+{% for key in users['ssh-authorized-keys'] %}
+{{ key }}
+{% endfor %}
+{% endif %}

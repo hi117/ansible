@@ -5,6 +5,8 @@
     users:
       - name: zwinnerman
         home: /home/zwinnerman
+        ssh-authorized-keys:
+          - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCmcOJZ9fHjwXSajK6AByWNNacO6jZobxAR9jkrQJAd0/zxQ2afYGmp+lxU1TWQ8KqdEtvD7XxNJN7e4rxkPHy6msARk/h14Lai1QMfmXo+6S3IWUa1NLWXobIXsTSY7qn+icgxeAAJ4WBrlLRI12R5pqX79cUZXP/GXS8kkta8i9CH19LBW/wQqTLOB9mD6mD9A4dBPAVadYSxjVIrqD3VYwxKjO8xFqiD/GpxyMSXRzeTm3MJct8W+mOYz7zweSRI1A0LxdLgVc8r5CvXgBTaMuOzlhz6dETSPFuMuEhWksDPZXfa5Q2YGhSP+se8o+pafBX5+5Rrm+pvzxE28vkde35NaBQ7Pe7UtSe9TxeO9oEe1MOyzJgS4tCc9a7dZMfvj023/bcVABqMIjRXxUrmoBqTLJe9ZKNc51jUQ88orNAXmOD1DRxqPz/b8l8SLYRMFBI6tYX78rhHgnJ5EJK12QMxPMI3IivkYhFzpPZM8Y+z5bQ5/5kQsoZ49Uyv9mhTfaOwIupmB+qyXgVijszUVMAW7YzvshCdT5wkltWXfCRgXIYt4AJuhMYamjbKPWoWIk68s7e2Yw+YZsNzyb3c+LEzaoUndBW8QNza62vAcW1UjJ5rbQvMlNTx/r7gSm4uXrGiVjFxIIOu/T+Hm2Y9t3yrmcRVd/ZfB8MBDDim8w== openpgp:0x70AAD8F4"
       - name: root
         home: /root
   roles:

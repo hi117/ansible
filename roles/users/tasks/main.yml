@@ -37,3 +37,21 @@
       - .config/kitty
       - .config/nvim
       - .config/libinput-gestures.conf
+
+- name: Make .ssh
+  file:
+    dest: "{{ item.home }}/.ssh"
+    state: directory
+    owner: "{{ item.name }}"
+    group: "{{ item.name }}"
+    mode: 0700
+  with_items: "{{ users }}"
+
+- name: Render authorized_keys
+  template:
+    src: authorized_keys.j2
+    dest: "{{ item.home }}/.ssh/authorized_keys"
+    owner: "{{ item.name }}"
+    group: "{{ item.name }}"
+    mode: 0400
+  with_items: "{{ users }}"
