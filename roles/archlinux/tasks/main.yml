@@ -45,6 +45,11 @@
       - irqbalance
       - git
 
+- name: Make yay directory
+  file:
+    state: directory
+    path: /usr/local/share/yay
+
 - name: Build yay
   makepkg:
     name: yay
