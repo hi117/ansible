@@ -21,9 +21,10 @@
     - [ i3, i3blocks ]
 
 - name: Install i3 config
-  template:
-    src: config
-    dest: "{{ item.home }}/.config/i3/config"
+  file:
+    src: "{{ item.home }}/.config/dotFiles/.config/i3/config"
+    path: "{{ item.home }}/.config/i3/config"
+    state: link
   with_items: "{{ users }}"
 
 - name: Install i3 blocks config
