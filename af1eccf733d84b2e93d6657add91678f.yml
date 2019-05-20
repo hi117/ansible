@@ -14,6 +14,8 @@
       tags: archlinux
     - role: users
       tags: users
+    - role: x11
+      tags: x11
     - role: i3
       tags: i3
     - role: slack

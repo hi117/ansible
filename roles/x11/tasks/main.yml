@@ -1,0 +1,12 @@
+---
+- name: Install packages
+  yay:
+    name: "{{ item }}"
+  with_items:
+    - nerd-fonts-complete
+    - noto-fonts
+    - noto-fonts-emoji
+    - otf-ipafont
+    - terminus-font
+    - ttf-ms-fonts
+    - adobe-source-code-pro-fonts
