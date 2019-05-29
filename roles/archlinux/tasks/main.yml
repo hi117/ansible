@@ -44,6 +44,7 @@
       - dhcpcd
       - irqbalance
       - git
+      - hub
 
 - name: Make yay directory
   file:
