@@ -45,6 +45,7 @@
       - irqbalance
       - git
       - hub
+      - zsh
 
 - name: Make yay directory
   file:
