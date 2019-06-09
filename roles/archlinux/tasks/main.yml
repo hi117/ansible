@@ -78,3 +78,9 @@
     name: systemd-timesyncd.service
     state: started
     enabled: yes
+
+- name: Enable/start sshd
+  systemd:
+    name: sshd.service
+    state: started
+    enabled: yes
