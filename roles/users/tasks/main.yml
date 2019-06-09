@@ -43,6 +43,7 @@
     src: "{{ item.home }}/.config/dotFiles/dircolors-solarized/dircolors.256dark"
     dest: "{{ item.home }}/.dircolors"
     state: link
+  with_items: "{{ users }}"
 
 - name: Make .ssh
   file:
