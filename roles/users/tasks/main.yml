@@ -38,6 +38,12 @@
       - .config/nvim
       - .config/libinput-gestures.conf
 
+- name: Install dircolors
+  file:
+    src: "{{ item.home }}/.config/dotFiles/dircolors-solarized/dircolors.256dark"
+    dest: "{{ item.home }}/.dircolors"
+    state: link
+
 - name: Make .ssh
   file:
     dest: "{{ item.home }}/.ssh"
