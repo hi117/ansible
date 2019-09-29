@@ -1,0 +1,13 @@
+---
+- name: Install ceph
+  yay:
+    state: present
+    name:
+      - ceph
+
+- name: Render ceph.conf
+  template:
+    src: ceph.conf
+    dest: /etc/ceph.conf
+    owner: ceph
+    mode: 644

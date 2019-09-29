@@ -1,0 +1,1 @@
+KUBELET_EXTRA_ARGS=--node-ip={{ansible_all_ipv4_addresses[0]}}

@@ -1,0 +1,19 @@
+---
+- name: install docker
+  yay:
+    name:
+      - docker
+- name: make docker override location
+  file:
+    state: directory
+    path: /etc/systemd/system/docker.service.d
+- name: configure docker
+  template:
+    src: override.conf
+    dest: /etc/systemd/system/docker.service.d/override.conf
+- name: start/enable docker
+  systemd:
+    name: docker
+    enabled: yes
+    state: started
+    daemon_reload: yes

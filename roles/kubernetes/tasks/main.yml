@@ -1,0 +1,21 @@
+---
+- name: Install go-pie
+  yay:
+    name: go-pie
+- name: Install kubernetes
+  become: false
+  yay:
+    name:
+      - kubelet-bin
+      - kubeadm-bin
+      - kubectl
+- name: enable kubelet
+  systemd:
+    name: kubelet.service
+    enabled: yes
+    state: started
+    daemon_reload: yes
+- name: configure node ip
+  template:
+    dest: /etc/default/kubelet
+    src: kubelet

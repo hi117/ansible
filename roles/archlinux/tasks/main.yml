@@ -1,4 +1,14 @@
 ---
+- name: configure pacman
+  template:
+    src: pacman.conf
+    dest: /etc/pacman.conf
+
+- name: configure makepkg
+  template:
+    src: makepkg.conf
+    dest: /etc/makepkg.conf
+
 - name: Install reflector
   pacman: name=reflector
 
@@ -46,6 +56,9 @@
       - git
       - hub
       - zsh
+      - python-parse
+      - python-pylint
+      - python-aiofiles
 
 - name: Make yay directory
   file:
@@ -61,6 +74,11 @@
 - name: Update aur
   yay: update_cache=yes upgrade=yes
   become: no
+
+- name: Install aur packages
+  yay:
+    name:
+      - python-kafka
 
 - name: Enable irqbalance
   systemd:

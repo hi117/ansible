@@ -132,7 +132,7 @@ def install_packages(module, pkgs, state):
   message = ''
 
   sudo_user = get_sudo_user(module)
-  cmd = 'sudo -u %s yay --noconfirm -S %s'
+  cmd = 'sudo -u %s yay --noprovides --noconfirm -S %s'
 
   for pkg in pkgs:
     installed, updated, latest_error = query_package(module, pkg, state)
